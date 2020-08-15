@@ -20,7 +20,7 @@ var commentSchema = new Schema({
     }
 }, {
     timestamps: true
-});
+}); 
 
 var dishSchema = new Schema({
     name: {
