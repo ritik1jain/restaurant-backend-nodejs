@@ -6,15 +6,25 @@ var authenticate = require('../authenticate');
 
 var router = express.Router();
 router.use(bodyParser.json());
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
 
+/* GET users listing. */
+
+router.get('/', authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+  User.find({}, (err, users) => {
+    if (err) {
+      return next(err);
+    } else {
+      res.statusCode = 200;
+      res.setHeader('Content_type', 'application/json');
+      res.json(users);
+    }
+  })
+}); 
 // Sign Up
 router.post('/signup', (req, res, next) => {
   User.register(new User({username: req.body.username}), 
-    req.body.password, (err, user) => {
+    req.body.password, 
+    (err, user) => {
     if(err) {
       res.statusCode = 500;
       res.setHeader('Content-Type', 'application/json');
